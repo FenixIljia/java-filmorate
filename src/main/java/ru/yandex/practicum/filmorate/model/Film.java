@@ -1,19 +1,21 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import jakarta.validation.constraints.*;
-import lombok.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Builder;
+import lombok.Data;
 import org.hibernate.validator.constraints.time.DurationMin;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * Film.
  */
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class Film {
     private long id;
     @NotNull
