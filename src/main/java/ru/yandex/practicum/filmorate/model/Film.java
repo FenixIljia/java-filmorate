@@ -11,9 +11,6 @@ import org.hibernate.validator.constraints.time.DurationMin;
 import java.time.Duration;
 import java.time.LocalDate;
 
-/**
- * Film.
- */
 @Data
 @Builder(toBuilder = true)
 public class Film {

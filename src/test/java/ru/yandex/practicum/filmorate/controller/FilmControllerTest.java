@@ -15,6 +15,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+//Тест контроллера
 class FilmControllerTest {
     private FilmController filmController;
     private Film validFilm;

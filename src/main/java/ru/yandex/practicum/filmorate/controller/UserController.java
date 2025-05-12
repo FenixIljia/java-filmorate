@@ -74,6 +74,7 @@ public class UserController {
         return oldUser;
     }
 
+    //Генерация id
     private long getNextId() {
         long currentMaxId = users.keySet()
                 .stream()

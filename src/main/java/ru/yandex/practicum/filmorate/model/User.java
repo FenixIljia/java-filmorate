@@ -6,6 +6,8 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
+
+//Пользователь
 @Data
 @Builder(toBuilder = true)
 public class User {

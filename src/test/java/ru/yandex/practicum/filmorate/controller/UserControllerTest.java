@@ -15,6 +15,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+//Тест контроллера пользователя
 class UserControllerTest {
     private UserController userController;
     private Validator validator;
