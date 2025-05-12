@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class FilmController {
 
     @PostMapping
     public Film create(@RequestBody @Valid Film film) {
-        if (film.getReleaseDate().isBefore(LocalDateTime.of(1895, 12, 28, 0, 0, 0))) {
+        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
             throw new ValidationException("Дата релиза должна быть не раньше 28 декабря 1895 года");
         }
         for (Film filmName : films.values()) {
@@ -34,13 +35,14 @@ public class FilmController {
             }
         }
         film.setId(getNextId());
-        return films.put(film.getId(), film);
+        films.put(film.getId(), film);
+        return film;
     }
 
     @PutMapping
     public Film update(@RequestBody @Valid Film film) {
         if (film.getReleaseDate() != null) {
-            if (film.getReleaseDate().isBefore(LocalDateTime.of(1895, 12, 28, 0, 0, 0))) {
+            if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
                 throw new ValidationException("Дата релиза должна быть не раньше 28 декабря 1895 года");
             }
         }

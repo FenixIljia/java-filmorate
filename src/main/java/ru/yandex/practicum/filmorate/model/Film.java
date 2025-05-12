@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.validator.constraints.time.DurationMin;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -14,12 +15,12 @@ import java.time.LocalDateTime;
 @Builder
 public class Film {
     private long id;
-    @NonNull
+    @NotNull
     @NotBlank
     private String name;
     @Size(max = 200)
     private String description;
-    private LocalDateTime releaseDate;
+    private LocalDate releaseDate;
     @DurationMin(nanos = 0)
     private Duration duration;
 }
