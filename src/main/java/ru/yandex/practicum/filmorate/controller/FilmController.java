@@ -61,6 +61,9 @@ public class FilmController {
         if (film.getDuration() != null) {
             oldFilm.setDuration(film.getDuration());
         }
+        if (film.getName() != null) {
+            oldFilm.setName(film.getName());
+        }
         return oldFilm;
     }
 

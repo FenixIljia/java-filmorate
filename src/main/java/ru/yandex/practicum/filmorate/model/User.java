@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -19,5 +20,5 @@ public class User {
     private String login;
     private String name;
     @Past
-    private LocalDateTime birthday;
+    private LocalDate birthday;
 }

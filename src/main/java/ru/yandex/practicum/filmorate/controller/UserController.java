@@ -2,10 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -13,6 +10,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+@RestController
+@RequestMapping("/users")
 public class UserController {
 
     private final Map<Long, User> users = new HashMap<>();
@@ -56,6 +55,7 @@ public class UserController {
         if (user.getName() != null) {
             oldUser.setName(user.getName());
         }
+        oldUser.setEmail(user.getEmail());
         return oldUser;
     }
 
