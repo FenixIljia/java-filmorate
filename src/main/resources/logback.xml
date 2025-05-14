@@ -1,0 +1,6 @@
+<configuration>
+    <!-- Установите уровень логирования для всего проекта -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+    </root>
+</configuration>
