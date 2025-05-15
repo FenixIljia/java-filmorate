@@ -3,8 +3,10 @@ package ru.yandex.practicum.filmorate.controller;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -50,10 +52,16 @@ class FilmControllerTest {
 
     @Test
     void shouldThrowExceptionForEarlyReleaseDate() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
         Film earlyFilm = validFilm;
         earlyFilm.setReleaseDate(LocalDate.of(1895, 12, 27));
+        Set<ConstraintViolation<Film>> violations = validator.validate(earlyFilm);
 
-        assertThrows(ValidationException.class, () -> filmController.create(earlyFilm));
+        assertFalse(violations.isEmpty());
+        boolean hasReleaseDateError = violations.stream()
+                .anyMatch(v -> v.getPropertyPath().toString().equals("releaseDate"));
+        assertTrue(hasReleaseDateError);
     }
 
     @Test

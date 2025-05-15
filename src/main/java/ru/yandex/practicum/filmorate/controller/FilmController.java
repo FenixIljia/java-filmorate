@@ -26,12 +26,6 @@ public class FilmController {
 
     @PostMapping
     public Film create(@RequestBody @Valid Film film) {
-        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
-            log.warn("Попытка добавления фильма с датой релиза раньше 28 декабря 1895 года. Дата релиза фильма - {}.",
-                    film.getReleaseDate()
-            );
-            throw new ValidationException("Дата релиза должна быть не раньше 28 декабря 1895 года");
-        }
         film.setId(getNextId());
         films.put(film.getId(), film);
         log.info("Добавлен новый фильм - {}.", film.getName());
