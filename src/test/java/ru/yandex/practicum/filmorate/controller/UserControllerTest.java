@@ -9,8 +9,12 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,10 +24,14 @@ class UserControllerTest {
     private UserController userController;
     private Validator validator;
     private User baseUser;
+    private UserService userService;
+    private UserStorage userStorage;
 
     @BeforeEach
     void setUp() {
-        userController = new UserController();
+        userStorage = new InMemoryUserStorage(new HashMap<>());
+        userService = new UserService(userStorage);
+        userController = new UserController(userStorage, userService);
 
         // Инициализация валидатора
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
