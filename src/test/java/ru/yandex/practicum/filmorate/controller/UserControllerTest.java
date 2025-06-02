@@ -31,7 +31,7 @@ class UserControllerTest {
     void setUp() {
         userStorage = new InMemoryUserStorage(new HashMap<>());
         userService = new UserService(userStorage);
-        userController = new UserController(userStorage, userService);
+        userController = new UserController(userService);
 
         // Инициализация валидатора
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {

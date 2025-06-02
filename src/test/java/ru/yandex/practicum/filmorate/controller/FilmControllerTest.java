@@ -28,15 +28,10 @@ class FilmControllerTest {
     private Film validFilm;
     private Film anotherFilm;
     private FilmService filmService;
-    private UserStorage userStorage;
-    private FilmStorage filmStorage;
 
     @BeforeEach
     void setUp() {
-        filmStorage = new InMemoryFilmStorage(new HashMap<>());
-        userStorage = new InMemoryUserStorage(new HashMap<>());
-        filmService = new FilmService(filmStorage, userStorage);
-        filmController = new FilmController(filmStorage, filmService);
+        filmController = new FilmController(filmService);
         validFilm = Film.builder()
                 .name("Valid Film")
                 .description("Valid Description")

@@ -17,14 +17,17 @@ import java.util.Set;
 @AllArgsConstructor
 public class FilmController {
 
-    private final FilmStorage storage;
-
     private final FilmService service;
 
     @GetMapping
     public Collection<Film> findAll() {
         log.info("Получен список всех фильмов.");
-        return storage.findAll();
+        return service.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public Film find(@PathVariable long id) {
+        return service.find(id);
     }
 
     @GetMapping("/popular")
@@ -34,12 +37,12 @@ public class FilmController {
 
     @PostMapping
     public Film create(@RequestBody @Valid Film film) {
-        return storage.create(film);
+        return service.create(film);
     }
 
     @PutMapping
     public Film update(@RequestBody @Valid Film film) {
-        return storage.update(film);
+        return service.update(film);
     }
 
     @PutMapping("/{id}/like/{userId}")

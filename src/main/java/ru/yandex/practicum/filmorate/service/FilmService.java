@@ -8,7 +8,9 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.Set;
 import java.util.TreeSet;
 
 @Service
@@ -54,6 +56,22 @@ public class FilmService {
         }
         log.info("Получение фильмов с наибольшим количеством лайков");
         return films;
+    }
+
+    public Collection<Film> findAll() {
+        return filmStorage.findAll();
+    }
+
+    public Film create(Film film) {
+        return filmStorage.create(film);
+    }
+
+    public Film update(Film film) {
+        return filmStorage.update(film);
+    }
+
+    public Film find(long id) {
+        return filmStorage.find(id);
     }
 
     private void validation(long idFilm, long idUser) {

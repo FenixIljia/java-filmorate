@@ -17,28 +17,26 @@ import java.util.Set;
 @AllArgsConstructor
 public class UserController {
 
-    private final UserStorage storage;
-
     private final UserService service;
 
     @GetMapping
     public Collection<User> findAll() {
-        return storage.findAll();
+        return service.findAll();
     }
 
     @GetMapping("/{id}")
     public User find(@PathVariable long id) {
-        return storage.find(id);
+        return service.find(id);
     }
 
     @PostMapping
     public User create(@RequestBody @Valid User user) {
-        return storage.create(user);
+        return service.create(user);
     }
 
     @PutMapping
     public User update(@RequestBody @Valid User user) {
-        return storage.update(user);
+        return service.update(user);
     }
 
     @PutMapping("/{id}/friends/{friendId}")

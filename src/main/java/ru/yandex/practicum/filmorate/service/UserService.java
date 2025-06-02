@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -84,6 +85,22 @@ public class UserService {
         }
         log.info("Получен список всех друзей пользователя {}", storage.find(user).getEmail());
         return users;
+    }
+
+    public Collection<User> findAll() {
+        return storage.findAll();
+    }
+
+    public User find(long id) {
+        return storage.find(id);
+    }
+
+    public User create(User user) {
+        return storage.create(user);
+    }
+
+    public User update(User user) {
+        return storage.update(user);
     }
 
     private void validation(long user, long friends) {
