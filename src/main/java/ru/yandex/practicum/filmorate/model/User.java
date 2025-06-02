@@ -18,6 +18,8 @@ import java.util.Set;
 @Slf4j
 @ToString(exclude = "friends")
 public class User {
+    @JsonIgnore
+    private final Set<Long> friends = new HashSet<>();
     private long id;
     @Email
     @NotNull
@@ -28,8 +30,6 @@ public class User {
     private String name;
     @Past
     private LocalDate birthday;
-    @JsonIgnore
-    private final Set<Long> friends = new HashSet<>();
 
     public User addFriends(User user) {
         if (friends.add(user.getId())) {

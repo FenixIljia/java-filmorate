@@ -21,6 +21,7 @@ import java.util.Set;
 @Builder(toBuilder = true)
 public class Film {
     private static final Logger log = LoggerFactory.getLogger(Film.class);
+    private final Set<User> likeUser = new HashSet<>();
     private long id;
     @NotNull
     @NotBlank
@@ -31,7 +32,6 @@ public class Film {
     private LocalDate releaseDate;
     @DurationMin(nanos = 1)
     private Duration duration;
-    private final Set<User> likeUser = new HashSet<>();
 
     public Film addLike(User user) {
         if (likeUser.add(user)) {
