@@ -3,7 +3,10 @@ package ru.yandex.practicum.filmorate.controller;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.mapper.Mapper;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.dto.UserDto;
+import ru.yandex.practicum.filmorate.mapper.UserMapper;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
@@ -19,23 +22,23 @@ public class UserController {
     private final UserService service;
 
     @GetMapping
-    public Collection<User> findAll() {
+    public Collection<UserDto> findAll() {
         return service.findAll();
     }
 
     @GetMapping("/{id}")
-    public User find(@PathVariable long id) {
-        return service.find(id);
+    public UserDto find(@PathVariable long id) {
+        return UserMapper.mapToUserDto(service.find(id));
     }
 
     @PostMapping
-    public User create(@RequestBody @Valid User user) {
-        return service.create(user);
+    public UserDto create(@RequestBody @Valid User user) {
+        return UserMapper.mapToUserDto(service.create(user));
     }
 
     @PutMapping
-    public User update(@RequestBody @Valid User user) {
-        return service.update(user);
+    public UserDto update(@RequestBody @Valid User user) {
+        return UserMapper.mapToUserDto(service.update(user));
     }
 
     @PutMapping("/{id}/friends/{friendId}")
