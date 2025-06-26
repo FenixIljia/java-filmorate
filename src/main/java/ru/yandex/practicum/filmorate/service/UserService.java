@@ -3,12 +3,14 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dal.UserDbStorage;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -16,36 +18,36 @@ import java.util.Set;
 @Slf4j
 public class UserService {
 
-    private final UserStorage storage;
+    private final UserDbStorage storage;
 
     // Метод добавляет пользователь в друзья друг другу
     public Set<User> addFriend(long user, long friends) {
         validation(user, friends);
-        User user1 = storage.find(user);
-        User friend = storage.find(friends);
-        user1.addFriends(friend);
-        friend.addFriends(user1);
+        Optional<User> user1 = storage.findById(user);
+        Optional<User> friend = storage.findById(friends);
+        user1.get().addFriends(friend.get());
+        friend.get().addFriends(user1.get());
         log.info(String.format(
                 "Пользователи %s и %s успешно добавлены друг другу в друзья",
-                user1.getEmail(),
-                friend.getEmail()
+                user1.get().getEmail(),
+                friend.get().getEmail()
         ));
-        return Set.of(user1, friend);
+        return Set.of(user1.get(), friend.get());
     }
-
+/*
     // Метод удаляет пользователь из друзе друг друга
     public Set<User> removeFriends(long user, long friends) {
         validation(user, friends);
-        User user1 = storage.find(user);
-        User friend = storage.find(friends);
-        user1.removeFriends(friend);
-        friend.removeFriends(user1);
+        Optional<User> user1 = storage.findById(user);
+        Optional<User> friend = storage.findById(friends);
+        user1.get().removeFriends(friend.get());
+        friend.get().removeFriends(user1.get());
         log.info(String.format(
                 "Пользователи %s и %s удалены из друзей друг друга.",
-                storage.find(user).getEmail(),
-                storage.find(friends).getEmail()
+                storage.findById(user).get().getEmail(),
+                storage.findById(friends).get().getEmail()
         ));
-        return Set.of(storage.find(user), storage.find(friends));
+        return Set.of(storage.findById(user).get(), storage.findById(friends).get());
     }
 
     // Метод возвращает общих друзей двух пользователей
@@ -85,18 +87,18 @@ public class UserService {
         }
         log.info("Получен список всех друзей пользователя {}", storage.find(user).getEmail());
         return users;
-    }
+    }*/
 
     public Collection<User> findAll() {
         return storage.findAll();
     }
 
     public User find(long id) {
-        return storage.find(id);
+        return storage.findById(id).get();
     }
 
     public User create(User user) {
-        return storage.create(user);
+        return storage.save(user);
     }
 
     public User update(User user) {

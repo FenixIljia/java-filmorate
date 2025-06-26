@@ -2,9 +2,7 @@ package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.exception.DuplicatedDataException;
 
@@ -14,9 +12,9 @@ import java.util.Set;
 
 //Пользователь
 @Data
-@Builder(toBuilder = true)
 @Slf4j
 @ToString(exclude = "friends")
+@EqualsAndHashCode(of = {"email"})
 public class User {
     @JsonIgnore
     private final Set<Long> friends = new HashSet<>();
