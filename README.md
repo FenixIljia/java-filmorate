@@ -27,7 +27,7 @@ Template repository for Filmorate project.
 
 * friends_id - первичный ключ;
 * внешний ключ user_id(ссылается на таблицу User) - пользователь;
-* внешний ключ friends_id(ссылается на таблицу User) - друг пользователя.
+* внешний ключ friend_id(ссылается на таблицу User) - друг пользователя.
 
 ## Genre
 
