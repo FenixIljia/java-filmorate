@@ -48,7 +48,7 @@ public class BaseDbStorage<T> {
         jdbc.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     query,
-                    new String[]{"user_id"}  // Явно указываем имя столбца с ключом
+                    Statement.RETURN_GENERATED_KEYS
             );
             for (int idx = 0; idx < params.length; idx++) {
                 ps.setObject(idx + 1, params[idx]);
@@ -56,7 +56,6 @@ public class BaseDbStorage<T> {
             return ps;
         }, keyHolder);
 
-        // Извлекаем ключ как Number
         Number key = keyHolder.getKey();
         if (key != null) {
             return key.longValue();

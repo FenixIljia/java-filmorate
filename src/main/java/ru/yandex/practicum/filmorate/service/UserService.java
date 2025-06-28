@@ -3,18 +3,18 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.yandex.practicum.filmorate.dal.FriendsDbStorage;
 import ru.yandex.practicum.filmorate.dal.UserDbStorage;
 import ru.yandex.practicum.filmorate.dto.UserDto;
+import ru.yandex.practicum.filmorate.exception.DuplicatedDataException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.mapper.UserMapper;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.List;
 import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,81 +23,65 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserDbStorage storage;
-
-    // Метод добавляет пользователь в друзья друг другу
-    public Set<User> addFriend(long user, long friends) {
-        validation(user, friends);
-        Optional<User> user1 = storage.findById(user);
-        Optional<User> friend = storage.findById(friends);
-        user1.get().addFriends(friend.get());
-        friend.get().addFriends(user1.get());
-        log.info(String.format(
-                "Пользователи %s и %s успешно добавлены друг другу в друзья",
-                user1.get().getEmail(),
-                friend.get().getEmail()
-        ));
-        return Set.of(user1.get(), friend.get());
-    }
-/*
-    // Метод удаляет пользователь из друзе друг друга
-    public Set<User> removeFriends(long user, long friends) {
-        validation(user, friends);
-        Optional<User> user1 = storage.findById(user);
-        Optional<User> friend = storage.findById(friends);
-        user1.get().removeFriends(friend.get());
-        friend.get().removeFriends(user1.get());
-        log.info(String.format(
-                "Пользователи %s и %s удалены из друзей друг друга.",
-                storage.findById(user).get().getEmail(),
-                storage.findById(friends).get().getEmail()
-        ));
-        return Set.of(storage.findById(user).get(), storage.findById(friends).get());
-    }
-
-    // Метод возвращает общих друзей двух пользователей
-    public Set<User> getGeneralFriends(long user1, long user2) {
-        validation(user1, user2);
-        final Set<User> generalFriends = new HashSet<>();
-        for (Long friend : storage.find(user1).getFriends()) {
-            for (Long user : storage.find(user2).getFriends()) {
-                if (storage.find(friend).equals(storage.find(user))) {
-                    log.info(String.format(
-                            "У пользователей %s и %s найден общий друг %s.",
-                            storage.find(user1).getEmail(),
-                            storage.find(user2).getEmail(),
-                            storage.find(user)
-                    ));
-                    generalFriends.add(storage.find(user));
-                }
-            }
-        }
-        log.info(
-                "Получен список общих друзей у пользовтелей {} и {}",
-                storage.find(user1).getEmail(),
-                storage.find(user2).getEmail()
-        );
-        return generalFriends;
-    }
-
-    // Метод возвращает всех друзей конктретного пользователя
-    public Set<User> findAllFriends(long user) {
-        if (user < 0) {
-            log.warn("Параметр user не может быть ниже нуля. Текущее значение - {}", user);
-            throw new ValidationException("Параметр user не может быть ниже нуля - " + user);
-        }
-        final Set<User> users = new HashSet<>();
-        for (Long friend : storage.find(user).getFriends()) {
-            users.add(storage.find(friend));
-        }
-        log.info("Получен список всех друзей пользователя {}", storage.find(user).getEmail());
-        return users;
-    }*/
+    private final FriendsDbStorage friendsDbStorage;
 
     public Collection<UserDto> findAll() {
         return storage.findAll()
                 .stream()
                 .map(UserMapper::mapToUserDto)
                 .collect(Collectors.toList());
+    }
+
+    // Метод добавляет пользователь в друзья друг другу
+    @Transactional
+    public void addFriend(long userId, long friendId) {
+        // Проверка существования пользователей
+        storage.getById(userId);
+        storage.getById(friendId);
+
+        // Проверка, что дружба ещё не существует
+        if (friendsDbStorage.friendshipExists(userId, friendId)) {
+            throw new DuplicatedDataException("Дружба уже существует");
+        }
+
+        // Создание взаимной дружбы
+        friendsDbStorage.addFriendship(userId, friendId);
+    }
+    // Метод удаляет пользователь из друзе друг друга
+    @Transactional
+    public void removeFriends(long userId, long friendId) {
+        // Проверка существования пользователей
+        User user = storage.getById(userId);
+        User friend = storage.getById(friendId);
+
+        // Удаление взаимной дружбы
+        friendsDbStorage.removeFriendship(userId, friendId);
+
+        log.info("Пользователи {} и {} удалены из друзей друг друга",
+                user.getEmail(), friend.getEmail());
+    }
+
+    // Метод возвращает всех друзей конктретного пользователя
+    public Set<User> findAllFriends(long userId) {
+        User user = storage.getById(userId);
+        List<Long> friendIds = friendsDbStorage.getFriendsIds(userId);
+
+        return friendIds.stream()
+                .map(storage::getById)
+                .collect(Collectors.toSet());
+    }
+
+    // Метод возвращает общих друзей двух пользователей
+    public Set<User> getCommonFriends(long userId1, long userId2) {
+        // Проверка существования пользователей
+        storage.getById(userId1);
+        storage.getById(userId2);
+
+        List<Long> commonFriendIds = friendsDbStorage.getCommonFriendsIds(userId1, userId2);
+
+        return commonFriendIds.stream()
+                .map(storage::getById)
+                .collect(Collectors.toSet());
     }
 
     public User find(long id) {

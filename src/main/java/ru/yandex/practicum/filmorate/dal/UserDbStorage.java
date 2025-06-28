@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import ru.yandex.practicum.filmorate.dal.mappers.UserRowMapper;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.Date;
@@ -58,5 +59,10 @@ public class UserDbStorage extends  BaseDbStorage<User> {
                 user.getId()
                 );
         return user;
+    }
+
+    public User getById(long userId) {
+        return findById(userId)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден: " + userId));
     }
 }

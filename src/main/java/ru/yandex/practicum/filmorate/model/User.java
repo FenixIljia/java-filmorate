@@ -17,7 +17,7 @@ import java.util.Set;
 @EqualsAndHashCode(of = {"email"})
 public class User {
     @JsonIgnore
-    private final Set<Long> friends = new HashSet<>();
+    private Set<Long> friends = new HashSet<>();
     private long id;
     @Email
     @NotNull
