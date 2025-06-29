@@ -13,8 +13,8 @@ public class RatingRowMapper implements RowMapper<RatingDto> {
     @Override
     public RatingDto mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         RatingDto ratingDto = new RatingDto();
-        ratingDto.setRating_id(resultSet.getLong("rating_id"));
-        ratingDto.setName(Rating.valueOf(resultSet.getString("name")));
+        ratingDto.setId(resultSet.getLong("rating_id"));
+        ratingDto.setName(resultSet.getString("name"));
         return ratingDto;
     }
 }

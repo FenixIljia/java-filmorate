@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.yandex.practicum.filmorate.exception.*;
 
+import java.util.NoSuchElementException;
+
 @RestControllerAdvice
 public class ErrorHandler {
 
@@ -51,5 +53,11 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handlerThrowable(Throwable e) {
         return new ErrorResponse("Произошла не предвиденная ошибка. " + e.getClass());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handlerNoSuchElementException(NoSuchElementException e) {
+        return new ErrorResponse(e.getMessage());
     }
 }

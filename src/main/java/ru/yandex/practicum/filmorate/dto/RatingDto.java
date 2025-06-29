@@ -5,6 +5,6 @@ import ru.yandex.practicum.filmorate.model.Rating;
 
 @Data
 public class RatingDto {
-    Rating name;
-    long rating_id;
+    String name;
+    long id;
 }

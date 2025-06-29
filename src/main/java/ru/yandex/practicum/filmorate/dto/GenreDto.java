@@ -5,6 +5,6 @@ import ru.yandex.practicum.filmorate.model.Genre;
 
 @Data
 public class GenreDto {
-    private long genre_id;
+    private long id;
     private String name;
 }

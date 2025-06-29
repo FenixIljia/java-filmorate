@@ -28,7 +28,7 @@ public class GenreDbStorage extends BaseDbStorage<GenreDto> {
                 genre.toString()
                 );
         GenreDto genreDto = new GenreDto();
-        genreDto.setGenre_id(id);
+        genreDto.setId(id);
         genreDto.setName(genre.toString());
         return genreDto;
     }
