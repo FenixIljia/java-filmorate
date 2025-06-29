@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -9,27 +8,22 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.time.DurationMin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.yandex.practicum.filmorate.Property.CustomDurationDeserializer;
-import ru.yandex.practicum.filmorate.dto.GenreDto;
-import ru.yandex.practicum.filmorate.dto.RatingDto;
 import ru.yandex.practicum.filmorate.exception.DuplicatedDataException;
 import ru.yandex.practicum.filmorate.validators.DateRange;
 
-import java.lang.annotation.Target;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.*;
 
 @Data
-public class Film {
+public class FilmForUpdate{
     private static final Logger log = LoggerFactory.getLogger(Film.class);
-    private final Set<Long> likeUser = new HashSet<>();
+    private final Set<User> likeUser = new HashSet<>();
     private long id;
     @NotNull
     @NotBlank
@@ -51,25 +45,25 @@ public class Film {
         return duration.toSeconds();
     }
 
-    public Film addLike(long user) {
+    public FilmForUpdate addLike(User user) {
         if (likeUser.add(user)) {
             log.info(String.format(
-                    "Лайк пользователя %d успешно добавлен.",
-                    user
+                    "Лайк пользователя %s успешно добавлен.",
+                    user.getEmail()
             ));
             return this;
         }
         log.warn(String.format(
-                "Пользователь %d уже ставил ранее лайк.",
-                user
+                "Пользователь %s уже ставил ранее лайк.",
+                user.getEmail()
         ));
         throw new DuplicatedDataException(String.format(
-                "Пользователь %d уже ставил ранее лайк.",
-                user
+                "Пользователь %s уже ставил ранее лайк.",
+                user.getEmail()
         ));
     }
 
-    public Film removeLike(User user) {
+    public FilmForUpdate removeLike(User user) {
         likeUser.remove(user);
         log.warn(String.format(
                 "Лайк пользователя %s удален.",

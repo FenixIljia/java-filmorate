@@ -4,34 +4,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.MPA;
 import ru.yandex.practicum.filmorate.model.Rating;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Slf4j
-public class FilmDto {
+public class FilmForPostmanTest {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private long id;
-    private final Set<Long> likeUser = new HashSet<>();
     private String name;
     private String description;
     private LocalDate releaseDate;
     private long duration;
-    private List<GenreForPostmanTest> genres = new ArrayList<>();
-    private MPA mpa;
+    private List<Long> genres = new ArrayList<>();
+    private long mpa;
 
-    public void addGenres(GenreForPostmanTest genreDto) {
+    public void addGenres(long genreDto) {
         genres.add(genreDto);
-    }
-
-    public void addLike(long user) {
-        likeUser.add(user);
     }
 }

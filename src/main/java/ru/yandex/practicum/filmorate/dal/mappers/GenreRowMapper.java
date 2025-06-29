@@ -1,14 +1,20 @@
 package ru.yandex.practicum.filmorate.dal.mappers;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.dto.GenreDto;
 import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class GenreRowMapper implements RowMapper<Genre> {
+@Component
+public class GenreRowMapper implements RowMapper<GenreDto> {
     @Override
-    public Genre mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        return Genre.valueOf(resultSet.getString("name"));
+    public GenreDto mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+        GenreDto genre = new GenreDto();
+        genre.setGenre_id(resultSet.getLong("genre_id"));
+        genre.setName(resultSet.getString("name"));
+        return genre;
     }
 }

@@ -7,11 +7,11 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Genre {
+public class MPA {
     long id;
 
     @JsonCreator
-    public Genre(@JsonProperty("id") int id) {
+    public MPA(@JsonProperty("id") int id) {
         this.id = id;
     }
 }
