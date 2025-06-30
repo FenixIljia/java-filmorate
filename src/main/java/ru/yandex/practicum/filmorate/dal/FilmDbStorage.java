@@ -88,8 +88,8 @@ public class FilmDbStorage extends BaseDbStorage<Film> {
         return films;
     }
 
-    public Optional<Film> findById(long film_id) {
-        Optional<Film> film = findOne(FIND_BY_ID_QUERY, film_id);
+    public Optional<Film> findById(long filmId) {
+        Optional<Film> film = findOne(FIND_BY_ID_QUERY, filmId);
         for (FilmGenre filmGenre : filmGenreBdStorage.findOne(film.get().getId())) {
             film.get().addGenre(new Genre(filmGenre.getGenreId(), genreDbStorage.findById(filmGenre.getGenreId()).get().getName()));
         }
