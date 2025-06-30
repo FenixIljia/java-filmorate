@@ -14,7 +14,7 @@ import java.time.Duration;
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FilmMapper {
-    public static FilmDto mapToFilmDto (Film film) {
+    public static FilmDto mapToFilmDto(Film film) {
         FilmDto dto = new FilmDto();
         dto.setId(film.getId());
         dto.setDescription(film.getDescription());
@@ -29,7 +29,7 @@ public class FilmMapper {
         return dto;
     }
 
-    public static FilmDto mapToFilmDto (FilmForUpdate film) {
+    public static FilmDto mapToFilmDto(FilmForUpdate film) {
         FilmDto dto = new FilmDto();
         dto.setId(film.getId());
         dto.setDescription(film.getDescription());
@@ -39,7 +39,7 @@ public class FilmMapper {
         return dto;
     }
 
-    public static Film updateFilmField (Film film, FilmForUpdate request) {
+    public static Film updateFilmField(Film film, FilmForUpdate request) {
         if (!request.getGenres().isEmpty()) {
             for (Genre genre : request.getGenres()) {
                 film.addGenre(genre);
