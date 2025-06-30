@@ -26,8 +26,8 @@ public class RatingDbStorage extends BaseDbStorage<RatingDto> {
         return insert(INSERT_QUERY, rating.toString());
     }
 
-    public Optional<RatingDto> findById(long rating_id) {
-        return findOne(FIND_BY_ID_QUERY, rating_id);
+    public Optional<RatingDto> findById(long ratingId) {
+        return findOne(FIND_BY_ID_QUERY, ratingId);
     }
 
     public Optional<RatingDto> findByName(String name) {
@@ -38,11 +38,11 @@ public class RatingDbStorage extends BaseDbStorage<RatingDto> {
         return findMany(FIND_ALL_QUERY);
     }
 
-    public void update(long rating_id) {
-        update(UPDATE_QUERY, rating_id);
+    public void update(long ratingId) {
+        update(UPDATE_QUERY, ratingId);
     }
 
-    public void deleteById(long rating_id) {
-        delete(DELETE_QUERY, rating_id);
+    public void deleteById(long ratingId) {
+        delete(DELETE_QUERY, ratingId);
     }
 }
