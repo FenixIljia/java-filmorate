@@ -37,19 +37,19 @@ public class GenreDbStorage extends BaseDbStorage<GenreDto> {
         return findMany(FIND_ALL_QUERY);
     }
 
-    public Optional<GenreDto> findById(long genre_id) {
-        return findOne(FIND_BY_ID_QUERY, genre_id);
+    public Optional<GenreDto> findById(long genreId) {
+        return findOne(FIND_BY_ID_QUERY, genreId);
     }
 
     public Optional<GenreDto> findByName(String name) {
         return findOne(FIND_BY_NAME_QUERY, name);
     }
 
-    public void update(long genre_id) {
-        update(UPDATE_QUERY, genre_id);
+    public void update(long genreId) {
+        update(UPDATE_QUERY, genreId);
     }
 
-    public void deleteById(long genre_id) {
-        delete(DELETE_QUERY, genre_id);
+    public void deleteById(long genreId) {
+        delete(DELETE_QUERY, genreId);
     }
 }
