@@ -37,7 +37,7 @@ public class FriendsDbStorage {
 
     public List<Long> getCommonFriendsIds(long userId1, long userId2) {
         return jdbc.queryForList("""
-            SELECT f1.friend_id 
+            SELECT f1.friend_id
             FROM friends f1
             JOIN friends f2 ON f1.friend_id = f2.friend_id
             WHERE f1.user_id = ? AND f2.user_id = ?
