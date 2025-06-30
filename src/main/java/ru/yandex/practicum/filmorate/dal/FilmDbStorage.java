@@ -100,7 +100,7 @@ public class FilmDbStorage extends BaseDbStorage<Film> {
         return findOne(FIND_BY_NAME_QUERY, name);
     }
 
-    public void deleteById(long film_id) {
-        delete(DELETE_QUERY, film_id);
+    public void deleteById(long filmId) {
+        delete(DELETE_QUERY, filmId);
     }
 }
