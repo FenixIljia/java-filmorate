@@ -47,6 +47,7 @@ public class UserService {
         // Создание взаимной дружбы
         friendsDbStorage.addFriendship(userId, friendId);
     }
+
     // Метод удаляет пользователь из друзе друг друга
     @Transactional
     public void removeFriends(long userId, long friendId) {
