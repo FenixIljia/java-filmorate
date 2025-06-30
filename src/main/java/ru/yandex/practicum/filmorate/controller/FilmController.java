@@ -4,16 +4,13 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.dal.FilmDbStorage;
 import ru.yandex.practicum.filmorate.dto.FilmDto;
-import ru.yandex.practicum.filmorate.dto.FilmForPostmanTest;
-import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.FilmForUpdate;
 import ru.yandex.practicum.filmorate.model.LikeUser;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/films")
@@ -45,7 +42,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public FilmDto update(@RequestBody @Valid FilmForUpdate film) {
+    public FilmDto update(@RequestBody @Valid Film film) {
         return service.update(film);
     }
 

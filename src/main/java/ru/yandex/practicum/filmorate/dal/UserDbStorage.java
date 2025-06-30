@@ -20,7 +20,7 @@ public class UserDbStorage extends  BaseDbStorage<User> {
     private static final String INSERT_QUERY = "INSERT INTO users (email, login, name, birthday) VALUES (?, ?, ?, ?)";
     private static final String UPDATE_QUERY = "UPDATE users SET email = ?, login = ?, name = ?, birthday = ? WHERE user_id = ?";
 
-    public UserDbStorage(JdbcTemplate jdbc, RowMapper<User> mapper) {
+    public UserDbStorage(JdbcTemplate jdbc, UserRowMapper mapper) {
         super(jdbc, mapper);
     }
 

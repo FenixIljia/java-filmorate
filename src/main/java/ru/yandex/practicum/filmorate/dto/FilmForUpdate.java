@@ -1,49 +1,48 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.dto;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.validator.constraints.time.DurationMin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.yandex.practicum.filmorate.Property.CustomDurationDeserializer;
 import ru.yandex.practicum.filmorate.exception.DuplicatedDataException;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.MPA;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.validators.DateRange;
 
-import java.time.Duration;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@JsonIgnoreProperties(ignoreUnknown = true)
+@NoArgsConstructor
 public class FilmForUpdate{
     private static final Logger log = LoggerFactory.getLogger(Film.class);
     private final Set<User> likeUser = new HashSet<>();
     private long id;
-    @NotNull
-    @NotBlank
     private String name;
     @Size(max = 200)
     private String description;
     @DateRange(min = "1895-12-28")
     private LocalDate releaseDate;
     @DurationMin(nanos = 1)
-    @JsonDeserialize(using = CustomDurationDeserializer.class)
-    private Duration duration;
-    @JsonAlias({"genre", "genres"})
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
+    private long duration;
+    @JsonAlias({"genre", "genres", "rate"})
     private List<Genre> genres = new ArrayList<>();
-    @JsonProperty("mpa")
+    @JsonAlias("mpa")
     private MPA rating;
-
-    @JsonGetter("duration")
-    public long getDurationInSeconds() {
-        return duration.toSeconds();
-    }
 
     public FilmForUpdate addLike(User user) {
         if (likeUser.add(user)) {
@@ -80,4 +79,14 @@ public class FilmForUpdate{
     public void dropGenre() {
         genres.clear();
     }
+
+/*    @JsonProperty("duration")
+    public long getDurationMinutes() {
+        return duration != null ? duration.toMinutes() : 0;
+    }
+
+    @JsonProperty("duration")
+    public void setDurationMinutes(long minutes) {
+        this.duration = Duration.ofMinutes(minutes);
+    }*/
 }

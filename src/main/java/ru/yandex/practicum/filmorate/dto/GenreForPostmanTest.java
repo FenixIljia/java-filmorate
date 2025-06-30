@@ -7,4 +7,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class GenreForPostmanTest {
     private long id;
+    String name;
 }

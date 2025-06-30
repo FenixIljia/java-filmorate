@@ -1,13 +1,13 @@
 package ru.yandex.practicum.filmorate.dto;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.MPA;
-import ru.yandex.practicum.filmorate.model.Rating;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -24,14 +24,28 @@ public class FilmDto {
     private String description;
     private LocalDate releaseDate;
     private long duration;
-    private List<GenreForPostmanTest> genres = new ArrayList<>();
+    private List<Genre> genres = new ArrayList<>();
     private MPA mpa;
 
-    public void addGenres(GenreForPostmanTest genreDto) {
+    public void addGenres(Genre genreDto) {
         genres.add(genreDto);
+    }
+
+    public void dropGenre() {
+        genres.clear();
     }
 
     public void addLike(long user) {
         likeUser.add(user);
+    }
+
+    @JsonGetter("duration")
+    public long getDurationInMinutes() {
+        return duration; // возвращаем полные минуты
+    }
+
+    @JsonSetter("duration")
+    public void setDurationFromMinutes(long minutes) {
+        this.duration = minutes;
     }
 }

@@ -2,20 +2,25 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.relational.core.sql.Like;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dal.*;
 import ru.yandex.practicum.filmorate.dto.FilmDto;
 import ru.yandex.practicum.filmorate.dto.FilmForPostmanTest;
-import ru.yandex.practicum.filmorate.dto.GenreDto;
-import ru.yandex.practicum.filmorate.dto.GenreForPostmanTest;
+import ru.yandex.practicum.filmorate.dto.FilmForUpdate;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.exception.ValidationForTest;
 import ru.yandex.practicum.filmorate.mapper.FilmForPostmanTestMapper;
 import ru.yandex.practicum.filmorate.mapper.FilmMapper;
-import ru.yandex.practicum.filmorate.model.*;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.LikeUser;
+import ru.yandex.practicum.filmorate.model.MPA;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +33,10 @@ public class FilmService {
     private final LikeUserBdStorage likeUserBdStorage;
 
     private final UserDbStorage userStorage;
+
+    private final GenreDbStorage genreDbStorage;
+
+    private final RatingDbStorage ratingDbStorage;
 
     public LikeUser addLike(long idFilm, long idUser) {
         validation(idFilm, idUser);
@@ -45,10 +54,6 @@ public class FilmService {
             log.warn("Нерпавильный параметр count. Доступный диапазаон 1+. Текущее значение - {}", count);
             throw new ValidationException("Параметр count не может быть меньше 1. Текущий параметр count - " + count);
         }
-/*        TreeSet<Film> films = new TreeSet<>(
-                Comparator.comparingInt((Film film) -> film.getLikeUser().size())
-                        .thenComparingLong(Film::getId)
-        );*/
         List<Film> films = new ArrayList<>();
         log.trace("Создан список фильмов с сортировкой");
         for (Film film : filmStorage.findAll()) {
@@ -87,33 +92,43 @@ public class FilmService {
     }
 
     public FilmDto create(Film film) {
-        //Созранение значени й пришедших из тестов
-        List<Genre> genre_id = new ArrayList<>();
         for (Genre genre : film.getGenres()) {
-            genre_id.add(genre);
+            if (genreDbStorage.findById(genre.getId()).isEmpty()) {
+                throw new NotFoundException("Жанра с id " + genre.getId() + " нет в базе данных");
+            }
         }
-        long rating_id = film.getRating().getId();
-        validationFilmRatingAndGenre(film);
+        if (ratingDbStorage.findById(film.getRating().getId()).isEmpty()) {
+            throw new NotFoundException("Рейтинга с id " + film.getRating().getId() + " нет в базе данных");
+        }
         filmStorage.save(film);
-        //Возвращения некорректных значений для тестов Postman
-        film.dropGenre();
-        film.setRating(new MPA(rating_id));
-        for (Genre genre : genre_id) {
-            film.addGenre(genre);
-        }
         return filmDtoMapping(film);
     }
 
-    public FilmDto update(FilmForUpdate film) {
+    public FilmDto update(Film film) {
         FilmDto film1 = find(film.getId());
-        validationFilmRatingAndGenre(film);
+        //       validationFilmRatingAndGenre(film);
         filmStorage.update(film1);
         return filmDtoMapping(film);
     }
 
     public FilmDto find(long id) {
-        return filmDtoMapping(filmStorage.findById(id).get());
-
+        FilmDto filmDto = filmDtoMapping(filmStorage.findById(id).get());
+        filmDto.getMpa().setName(ratingDbStorage.findById(filmDto.getMpa().getId()).get().getName());
+/*        if (!(filmDto.getGenres().getFirst().getId() == 0)) {
+            List<Genre> uniqueGenres = filmDto.getGenres().stream()
+                    .distinct()
+                    .toList();
+            filmDto.dropGenre();
+            for (Genre uniqueGenre : uniqueGenres) {
+                filmDto.addGenres(uniqueGenre);
+            }
+            for (Genre genre : filmDto.getGenres()) {
+                genre.setName(genreDbStorage.findById(genre.getId()).get().getName());
+            }
+        } else {
+            filmDto.setGenres(null);
+        }*/
+        return filmDto;
     }
 
     private void validation(long idFilm, long idUser) {
@@ -129,17 +144,19 @@ public class FilmService {
 
     private FilmDto filmDtoMapping(Film film) {
         FilmDto filmDto = FilmMapper.mapToFilmDto(film);
-        for (Genre genre : film.getGenres()) {
-            filmDto.addGenres(new GenreForPostmanTest(genre.getId()));
-        }
-        filmDto.setMpa(film.getRating());
+/*        if (!filmDto.getGenres().isEmpty()) {
+            for (Genre genre : film.getGenres()) {
+                filmDto.addGenres(new Genre(genre.getId(), genre.getName()));
+            }
+        }*/
+        //      filmDto.setMpa(film.getRating());
         return filmDto;
     }
 
     private FilmDto filmDtoMapping(FilmForUpdate film) {
         FilmDto filmDto = FilmMapper.mapToFilmDto(film);
         for (Genre genre : film.getGenres()) {
-            filmDto.addGenres(new GenreForPostmanTest(genre.getId()));
+            filmDto.addGenres(new Genre(genre.getId(), genre.getName()));
         }
         filmDto.setMpa(film.getRating());
         return filmDto;

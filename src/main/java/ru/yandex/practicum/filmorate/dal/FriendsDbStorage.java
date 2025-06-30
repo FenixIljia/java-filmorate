@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.dal;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.yandex.practicum.filmorate.dal.BaseDbStorage;
 
 import java.util.List;
 
@@ -17,19 +16,14 @@ public class FriendsDbStorage {
 
     @Transactional
     public void addFriendship(long userId, long friendId) {
-        // Вставляем взаимную дружбу в обе стороны
         jdbc.update("INSERT INTO friends (user_id, friend_id) VALUES (?, ?)", userId, friendId);
 //        jdbc.update("INSERT INTO friends (user_id, friend_id) VALUES (?, ?)", friendId, userId);
     }
 
     @Transactional
     public void removeFriendship(long userId, long friendId) {
-        jdbc.update("""
-            DELETE FROM friends 
-            WHERE (user_id = ? AND friend_id = ?) 
-               OR (user_id = ? AND friend_id = ?)
-            """,
-                userId, friendId, friendId, userId
+        jdbc.update("DELETE FROM friends WHERE (user_id = ? AND friend_id = ?)",
+                userId, friendId
         );
     }
 

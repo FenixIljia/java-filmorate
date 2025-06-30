@@ -1,30 +1,25 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.time.DurationMin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.yandex.practicum.filmorate.Property.CustomDurationDeserializer;
-import ru.yandex.practicum.filmorate.dto.GenreDto;
-import ru.yandex.practicum.filmorate.dto.RatingDto;
 import ru.yandex.practicum.filmorate.exception.DuplicatedDataException;
 import ru.yandex.practicum.filmorate.validators.DateRange;
 
-import java.lang.annotation.Target;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Data
 public class Film {
@@ -39,17 +34,12 @@ public class Film {
     @DateRange(min = "1895-12-28")
     private LocalDate releaseDate;
     @DurationMin(nanos = 1)
-    @JsonDeserialize(using = CustomDurationDeserializer.class)
     private Duration duration;
     @JsonAlias({"genre", "genres"})
     private List<Genre> genres = new ArrayList<>();
     @JsonProperty("mpa")
     private MPA rating;
 
-    @JsonGetter("duration")
-    public long getDurationInSeconds() {
-        return duration.toSeconds();
-    }
 
     public Film addLike(long user) {
         if (likeUser.add(user)) {
@@ -85,5 +75,15 @@ public class Film {
 
     public void dropGenre() {
         genres.clear();
+    }
+
+    @JsonGetter("duration")
+    public long getDurationInMinutes() {
+        return duration.toMinutes(); // возвращаем полные минуты
+    }
+
+    @JsonSetter("duration")
+    public void setDurationFromMinutes(long minutes) {
+        this.duration = Duration.ofMinutes(minutes);
     }
 }

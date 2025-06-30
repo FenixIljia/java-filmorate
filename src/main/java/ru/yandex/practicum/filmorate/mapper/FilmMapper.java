@@ -1,21 +1,15 @@
 package ru.yandex.practicum.filmorate.mapper;
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.dal.GenreDbStorage;
-import ru.yandex.practicum.filmorate.dal.mappers.GenreRowMapper;
 import ru.yandex.practicum.filmorate.dto.FilmDto;
-import ru.yandex.practicum.filmorate.dto.FilmForPostmanTest;
+import ru.yandex.practicum.filmorate.dto.FilmForUpdate;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.FilmForUpdate;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.stream.Collectors;
+import java.time.Duration;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -25,11 +19,13 @@ public class FilmMapper {
         dto.setId(film.getId());
         dto.setDescription(film.getDescription());
         dto.setName(film.getName());
-        dto.setDuration(film.getDuration().toSeconds());
+        dto.setDuration(film.getDuration().toMinutes());
         dto.setReleaseDate(film.getReleaseDate());
         for (Long l : film.getLikeUser()) {
             dto.addLike(l);
         }
+        dto.setMpa(film.getRating());
+        dto.setGenres(film.getGenres());
         return dto;
     }
 
@@ -38,7 +34,7 @@ public class FilmMapper {
         dto.setId(film.getId());
         dto.setDescription(film.getDescription());
         dto.setName(film.getName());
-        dto.setDuration(film.getDuration().toSeconds());
+        dto.setDuration(film.getDuration());
         dto.setReleaseDate(film.getReleaseDate());
         return dto;
     }
@@ -63,8 +59,8 @@ public class FilmMapper {
         if (request.getReleaseDate() != null) {
             film.setReleaseDate(request.getReleaseDate());
         }
-        if (request.getDuration() != null) {
-            film.setDuration(request.getDuration());
+        if (request.getDuration() == 0) {
+            film.setDuration(Duration.ofMinutes(request.getDuration()));
         }
         if (request.getRating() != null) {
             film.setRating(request.getRating());
