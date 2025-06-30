@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.dal.mappers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Friends;
 
 import java.sql.ResultSet;
