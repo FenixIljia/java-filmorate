@@ -12,8 +12,8 @@ public class LikeUserRowMapper implements RowMapper<LikeUser> {
     @Override
     public LikeUser mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         LikeUser likeUser = new LikeUser();
-        likeUser.setFilm_id(resultSet.getLong("film_id"));
-        likeUser.setUser_id(resultSet.getLong("user_id"));
+        likeUser.setFilmId(resultSet.getLong("film_id"));
+        likeUser.setUserId(resultSet.getLong("user_id"));
         return likeUser;
     }
 }

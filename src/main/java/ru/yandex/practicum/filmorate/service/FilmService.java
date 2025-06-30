@@ -68,8 +68,8 @@ public class FilmService {
         log.info("Получение фильмов с наибольшим количеством лайков");
         for (LikeUser like : likeUserBdStorage.findAll()) {
             for (Film film : films) {
-                if (film.getId() == like.getFilm_id()) {
-                    film.addLike(like.getUser_id());
+                if (film.getId() == like.getFilmId()) {
+                    film.addLike(like.getUserId());
                 }
             }
         }

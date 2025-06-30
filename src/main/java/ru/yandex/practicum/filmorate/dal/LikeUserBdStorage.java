@@ -28,8 +28,8 @@ public class LikeUserBdStorage extends BaseDbStorage<LikeUser> {
     public LikeUser crate(long film, long user) {
         insert(INSERT_QUERY, film, user);
         LikeUser likeUser = new LikeUser();
-        likeUser.setUser_id(user);
-        likeUser.setFilm_id(film);
+        likeUser.setUserId(user);
+        likeUser.setFilmId(film);
         return likeUser;
     }
 
@@ -48,16 +48,16 @@ public class LikeUserBdStorage extends BaseDbStorage<LikeUser> {
     public LikeUser updateByUserId(User user, Film film) {
         update(UPDATE_BY_USER_ID_QUERY, film.getId(), user.getId(), user.getId());
         LikeUser likeUser = new LikeUser();
-        likeUser.setFilm_id(film.getId());
-        likeUser.setUser_id(user.getId());
+        likeUser.setFilmId(film.getId());
+        likeUser.setUserId(user.getId());
         return likeUser;
     }
 
     public LikeUser updateByFilmId(long user, long film) {
         update(UPDATE_BY_FILM_ID_QUERY, film, user, film);
         LikeUser likeUser = new LikeUser();
-        likeUser.setFilm_id(film);
-        likeUser.setUser_id(user);
+        likeUser.setFilmId(film);
+        likeUser.setUserId(user);
         return likeUser;
     }
 
