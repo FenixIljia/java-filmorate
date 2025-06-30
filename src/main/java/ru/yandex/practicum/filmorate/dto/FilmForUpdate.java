@@ -27,7 +27,7 @@ import java.util.Set;
 @EqualsAndHashCode
 @JsonIgnoreProperties(ignoreUnknown = true)
 @NoArgsConstructor
-public class FilmForUpdate{
+public class FilmForUpdate {
     private static final Logger log = LoggerFactory.getLogger(Film.class);
     private final Set<User> likeUser = new HashSet<>();
     private long id;
