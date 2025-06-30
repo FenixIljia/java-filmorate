@@ -9,7 +9,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FilmForPostmanTestMapper {
-    public static FilmForPostmanTest mapToFilmDto (Film film) {
+    public static FilmForPostmanTest mapToFilmDto(Film film) {
         FilmForPostmanTest dto = new FilmForPostmanTest();
         dto.setId(film.getId());
         dto.setDescription(film.getDescription());
