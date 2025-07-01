@@ -79,7 +79,7 @@ public class Film {
 
     @JsonGetter("duration")
     public long getDurationInMinutes() {
-        return duration.toMinutes(); // возвращаем полные минуты
+        return duration.toMinutes();
     }
 
     @JsonSetter("duration")

@@ -41,7 +41,7 @@ public class FilmDto {
 
     @JsonGetter("duration")
     public long getDurationInMinutes() {
-        return duration; // возвращаем полные минуты
+        return duration;
     }
 
     @JsonSetter("duration")

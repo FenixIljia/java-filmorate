@@ -17,7 +17,6 @@ public class FriendsDbStorage {
     @Transactional
     public void addFriendship(long userId, long friendId) {
         jdbc.update("INSERT INTO friends (user_id, friend_id) VALUES (?, ?)", userId, friendId);
-//        jdbc.update("INSERT INTO friends (user_id, friend_id) VALUES (?, ?)", friendId, userId);
     }
 
     @Transactional

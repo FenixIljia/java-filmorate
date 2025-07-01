@@ -38,12 +38,10 @@ public class UserService {
         // Проверка существования пользователей
         storage.getById(userId);
         storage.getById(friendId);
-
         // Проверка, что дружба ещё не существует
         if (friendsDbStorage.friendshipExists(userId, friendId)) {
             throw new DuplicatedDataException("Дружба уже существует");
         }
-
         // Создание взаимной дружбы
         friendsDbStorage.addFriendship(userId, friendId);
     }
@@ -54,10 +52,8 @@ public class UserService {
         // Проверка существования пользователей
         User user = storage.getById(userId);
         User friend = storage.getById(friendId);
-
         // Удаление взаимной дружбы
         friendsDbStorage.removeFriendship(userId, friendId);
-
         log.info("Пользователи {} и {} удалены из друзей друг друга",
                 user.getEmail(), friend.getEmail());
     }
@@ -66,7 +62,6 @@ public class UserService {
     public Set<User> findAllFriends(long userId) {
         User user = storage.getById(userId);
         List<Long> friendIds = friendsDbStorage.getFriendsIds(userId);
-
         return friendIds.stream()
                 .map(storage::getById)
                 .collect(Collectors.toSet());
@@ -77,9 +72,7 @@ public class UserService {
         // Проверка существования пользователей
         storage.getById(userId1);
         storage.getById(userId2);
-
         List<Long> commonFriendIds = friendsDbStorage.getCommonFriendsIds(userId1, userId2);
-
         return commonFriendIds.stream()
                 .map(storage::getById)
                 .collect(Collectors.toSet());

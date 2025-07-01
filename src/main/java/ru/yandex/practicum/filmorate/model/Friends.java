@@ -6,5 +6,5 @@ import lombok.Data;
 public class Friends {
     private final long userId;
     private final long friendId;
-    private final String status; // PENDING, CONFIRMED
+    private final String status;
 }

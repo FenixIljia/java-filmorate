@@ -22,13 +22,11 @@ public class FilmDbStorage extends BaseDbStorage<Film> {
             "VALUES (?, ?, ?, ?, ?)";
     private static final String UPDATE_QUERY = "UPDATE film SET name = ?, description = ?, release_date = ?, duration = ?, rating_id = ? WHERE film_id = ?";
     private static final String DELETE_QUERY = "DELETE film WHERE film_id = ?";
-    private final RatingDbStorage ratingDbStorage;
     private final GenreDbStorage genreDbStorage;
     private final FilmGenreBdStorage filmGenreBdStorage;
 
     public FilmDbStorage(JdbcTemplate jdbc, RowMapper<Film> mapper, RatingDbStorage ratingDbStorage, GenreDbStorage genreDbStorage, FilmGenreBdStorage filmGenreBdStorage) {
         super(jdbc, mapper);
-        this.ratingDbStorage = ratingDbStorage;
         this.genreDbStorage = genreDbStorage;
         this.filmGenreBdStorage = filmGenreBdStorage;
     }

@@ -5,17 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dal.*;
 import ru.yandex.practicum.filmorate.dto.FilmDto;
-import ru.yandex.practicum.filmorate.dto.FilmForPostmanTest;
 import ru.yandex.practicum.filmorate.dto.FilmForUpdate;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.exception.ValidationForTest;
-import ru.yandex.practicum.filmorate.mapper.FilmForPostmanTestMapper;
 import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.LikeUser;
-import ru.yandex.practicum.filmorate.model.MPA;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,8 +27,6 @@ public class FilmService {
     private final FilmDbStorage filmStorage;
 
     private final LikeUserBdStorage likeUserBdStorage;
-
-    private final UserDbStorage userStorage;
 
     private final GenreDbStorage genreDbStorage;
 
@@ -106,7 +100,6 @@ public class FilmService {
 
     public FilmDto update(Film film) {
         FilmDto film1 = find(film.getId());
-        //       validationFilmRatingAndGenre(film);
         filmStorage.update(film1);
         return filmDtoMapping(film);
     }
@@ -114,20 +107,6 @@ public class FilmService {
     public FilmDto find(long id) {
         FilmDto filmDto = filmDtoMapping(filmStorage.findById(id).get());
         filmDto.getMpa().setName(ratingDbStorage.findById(filmDto.getMpa().getId()).get().getName());
-/*        if (!(filmDto.getGenres().getFirst().getId() == 0)) {
-            List<Genre> uniqueGenres = filmDto.getGenres().stream()
-                    .distinct()
-                    .toList();
-            filmDto.dropGenre();
-            for (Genre uniqueGenre : uniqueGenres) {
-                filmDto.addGenres(uniqueGenre);
-            }
-            for (Genre genre : filmDto.getGenres()) {
-                genre.setName(genreDbStorage.findById(genre.getId()).get().getName());
-            }
-        } else {
-            filmDto.setGenres(null);
-        }*/
         return filmDto;
     }
 
@@ -143,14 +122,7 @@ public class FilmService {
     }
 
     private FilmDto filmDtoMapping(Film film) {
-        FilmDto filmDto = FilmMapper.mapToFilmDto(film);
-/*        if (!filmDto.getGenres().isEmpty()) {
-            for (Genre genre : film.getGenres()) {
-                filmDto.addGenres(new Genre(genre.getId(), genre.getName()));
-            }
-        }*/
-        //      filmDto.setMpa(film.getRating());
-        return filmDto;
+        return FilmMapper.mapToFilmDto(film);
     }
 
     private FilmDto filmDtoMapping(FilmForUpdate film) {
@@ -160,44 +132,5 @@ public class FilmService {
         }
         filmDto.setMpa(film.getRating());
         return filmDto;
-    }
-
-    private FilmForPostmanTest filmForPostmanTestMapper(Film film) {
-        return FilmForPostmanTestMapper.mapToFilmDto(film);
-    }
-
-    // Для тестов. Принудительное присваивание существующих в базе данных значений жанра и рейтинга
-    // так как в тестах постамана при добавлении фильма, перед добавлением в базу данных не добавляется
-    // рейтиг и жанр. Получается фильм пытается добавиться с несуществующими рейтингом и жанром, что приводит к ошибке
-    private void validationFilmRatingAndGenre(Film film) {
-        if (film.getRating().getId() == 10) {
-            throw new ValidationForTest();
-        }
-        if (film.getGenres().getFirst().getId() == 500) {
-            throw new ValidationForTest();
-        }
-        if (film.getRating().getId() != 1) {
-            film.setRating(new MPA(1));
-        }
-        if (film.getGenres().isEmpty()) {
-            film.addGenre(new Genre(1));
-        }
-        if (film.getGenres().getFirst().getId() != 1) {
-            film.dropGenre();
-            film.addGenre(new Genre(1));
-        }
-    }
-
-    private void validationFilmRatingAndGenre(FilmForUpdate film) {
-        if (film.getRating().getId() != 1) {
-            film.setRating(new MPA(1));
-        }
-        if (film.getGenres().isEmpty()) {
-            film.addGenre(new Genre(1));
-        }
-        if (film.getGenres().getFirst().getId() != 1) {
-            film.dropGenre();
-            film.addGenre(new Genre(1));
-        }
     }
 }

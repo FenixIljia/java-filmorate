@@ -44,7 +44,6 @@ public class BaseDbStorage<T> {
 
     protected long insert(String query, Object... params) {
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-
         jdbc.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     query,
@@ -55,7 +54,6 @@ public class BaseDbStorage<T> {
             }
             return ps;
         }, keyHolder);
-
         Number key = keyHolder.getKey();
         if (key != null) {
             return key.longValue();

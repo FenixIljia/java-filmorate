@@ -79,14 +79,4 @@ public class FilmForUpdate {
     public void dropGenre() {
         genres.clear();
     }
-
-/*    @JsonProperty("duration")
-    public long getDurationMinutes() {
-        return duration != null ? duration.toMinutes() : 0;
-    }
-
-    @JsonProperty("duration")
-    public void setDurationMinutes(long minutes) {
-        this.duration = Duration.ofMinutes(minutes);
-    }*/
 }
