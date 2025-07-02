@@ -4,11 +4,13 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.dto.FilmDto;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.LikeUser;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("/films")
@@ -19,38 +21,38 @@ public class FilmController {
     private final FilmService service;
 
     @GetMapping
-    public Collection<Film> findAll() {
+    public Collection<FilmDto> findAll() {
         log.info("Получен список всех фильмов.");
         return service.findAll();
     }
 
     @GetMapping("/{id}")
-    public Film find(@PathVariable long id) {
+    public FilmDto find(@PathVariable long id) {
         return service.find(id);
     }
 
     @GetMapping("/popular")
-    public Set<Film> getPopularFilmForLike(@RequestParam(defaultValue = "10") long count) {
+    public List<FilmDto> getPopularFilmForLike(@RequestParam(defaultValue = "10") long count) {
         return service.getPopularFilmForLike(count);
     }
 
     @PostMapping
-    public Film create(@RequestBody @Valid Film film) {
+    public FilmDto create(@RequestBody @Valid Film film) {
         return service.create(film);
     }
 
     @PutMapping
-    public Film update(@RequestBody @Valid Film film) {
+    public FilmDto update(@RequestBody @Valid Film film) {
         return service.update(film);
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public Film addLike(@PathVariable long id, @PathVariable long userId) {
+    public LikeUser addLike(@PathVariable long id, @PathVariable long userId) {
         return service.addLike(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public Film removeLike(@PathVariable long id, @PathVariable long userId) {
-        return service.removeLike(id, userId);
+    public void removeLike(@PathVariable long id, @PathVariable long userId) {
+        service.removeLike(id, userId);
     }
 }

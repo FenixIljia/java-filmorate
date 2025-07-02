@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.dto.UserDto;
+import ru.yandex.practicum.filmorate.mapper.UserMapper;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
@@ -19,33 +21,33 @@ public class UserController {
     private final UserService service;
 
     @GetMapping
-    public Collection<User> findAll() {
+    public Collection<UserDto> findAll() {
         return service.findAll();
     }
 
     @GetMapping("/{id}")
-    public User find(@PathVariable long id) {
-        return service.find(id);
+    public UserDto find(@PathVariable long id) {
+        return UserMapper.mapToUserDto(service.find(id));
     }
 
     @PostMapping
-    public User create(@RequestBody @Valid User user) {
-        return service.create(user);
+    public UserDto create(@RequestBody @Valid User user) {
+        return UserMapper.mapToUserDto(service.create(user));
     }
 
     @PutMapping
-    public User update(@RequestBody @Valid User user) {
-        return service.update(user);
+    public UserDto update(@RequestBody @Valid User user) {
+        return UserMapper.mapToUserDto(service.update(user));
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public Set<User> addFriend(@PathVariable long id, @PathVariable long friendId) {
-        return service.addFriend(id, friendId);
+    public void addFriend(@PathVariable long id, @PathVariable long friendId) {
+        service.addFriend(id, friendId);
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
-    public Set<User> removeFriend(@PathVariable long id, @PathVariable long friendId) {
-        return service.removeFriends(id, friendId);
+    public void removeFriend(@PathVariable long id, @PathVariable long friendId) {
+        service.removeFriends(id, friendId);
     }
 
     @GetMapping("/{id}/friends")
@@ -55,6 +57,6 @@ public class UserController {
 
     @GetMapping("/{id}/friends/common/{otherId}")
     public Set<User> getGeneralFriends(@PathVariable long id, @PathVariable long otherId) {
-        return service.getGeneralFriends(id, otherId);
+        return service.getCommonFriends(id, otherId);
     }
 }

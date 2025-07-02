@@ -1,65 +1,68 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.dto;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.validator.constraints.time.DurationMin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.yandex.practicum.filmorate.exception.DuplicatedDataException;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.MPA;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.validators.DateRange;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Data
-public class Film {
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@JsonIgnoreProperties(ignoreUnknown = true)
+@NoArgsConstructor
+public class FilmForUpdate {
     private static final Logger log = LoggerFactory.getLogger(Film.class);
-    private final Set<Long> likeUser = new HashSet<>();
+    private final Set<User> likeUser = new HashSet<>();
     private long id;
-    @NotNull
-    @NotBlank
     private String name;
     @Size(max = 200)
     private String description;
     @DateRange(min = "1895-12-28")
     private LocalDate releaseDate;
     @DurationMin(nanos = 1)
-    private Duration duration;
-    @JsonAlias({"genre", "genres"})
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
+    private long duration;
+    @JsonAlias({"genre", "genres", "rate"})
     private List<Genre> genres = new ArrayList<>();
-    @JsonProperty("mpa")
+    @JsonAlias("mpa")
     private MPA rating;
 
-
-    public Film addLike(long user) {
+    public FilmForUpdate addLike(User user) {
         if (likeUser.add(user)) {
             log.info(String.format(
-                    "Лайк пользователя %d успешно добавлен.",
-                    user
+                    "Лайк пользователя %s успешно добавлен.",
+                    user.getEmail()
             ));
             return this;
         }
         log.warn(String.format(
-                "Пользователь %d уже ставил ранее лайк.",
-                user
+                "Пользователь %s уже ставил ранее лайк.",
+                user.getEmail()
         ));
         throw new DuplicatedDataException(String.format(
-                "Пользователь %d уже ставил ранее лайк.",
-                user
+                "Пользователь %s уже ставил ранее лайк.",
+                user.getEmail()
         ));
     }
 
-    public Film removeLike(User user) {
+    public FilmForUpdate removeLike(User user) {
         likeUser.remove(user);
         log.warn(String.format(
                 "Лайк пользователя %s удален.",
@@ -75,15 +78,5 @@ public class Film {
 
     public void dropGenre() {
         genres.clear();
-    }
-
-    @JsonGetter("duration")
-    public long getDurationInMinutes() {
-        return duration.toMinutes();
-    }
-
-    @JsonSetter("duration")
-    public void setDurationFromMinutes(long minutes) {
-        this.duration = Duration.ofMinutes(minutes);
     }
 }
